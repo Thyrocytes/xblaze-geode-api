@@ -41,7 +41,17 @@ namespace xblazeapi {
     }
 
     std::unordered_map<std::string, std::string> formatResponse(std::string_view response, std::string_view sep) {
-        auto split = asp::iter::split(response, sep).arrayChunks<2>();
-        return std::unordered_map<std::string, std::string>(split.begin(), split.end());
+        std::unordered_map<std::string, std::string> map;
+        map.reserve(std::count(response.begin(), response.end(), sep));
+
+        size_t lastPos = 0;
+        while (lastPos != response.npos) {
+            const size_t pos = response.find_first_of(sep, lastPos); // "1:23:4:5" will return 2
+            const size_t next = response.find_first_of(sep, pos + 1); // Will return 5
+            map.emplace(pos.substr(lastPos, pos), pos.substr(pos, next));
+            lastPos = next + 1;
+        }
+
+        return map;
     }
 }
