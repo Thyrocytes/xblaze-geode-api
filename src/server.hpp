@@ -48,7 +48,7 @@ namespace xblazeapi {
         while (lastPos != response.npos) {
             const size_t pos = response.find_first_of(sep, lastPos); // "1:23:4:5" will return 2
             const size_t next = response.find_first_of(sep, pos + 1); // Will return 5
-            map.emplace(pos.substr(lastPos, pos), pos.substr(pos, next));
+            map.emplace(response.substr(lastPos, pos), response.substr(pos, next));
             lastPos = next + 1;
         }
 
